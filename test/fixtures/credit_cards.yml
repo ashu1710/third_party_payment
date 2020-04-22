@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  digits: MyString
+  cvc: 1
+  month: 1
+  year: 1
+  user: one
+
+two:
+  digits: MyString
+  cvc: 1
+  month: 1
+  year: 1
+  user: two
