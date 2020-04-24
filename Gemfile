@@ -21,6 +21,9 @@ gem 'dotenv-rails'
 gem 'stripe'
 gem 'stripe_event'
 gem 'pry'
+gem 'activemerchant'
+gem 'payuindia', :git => 'git://github.com/payu-india/payuindia.git'
+
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

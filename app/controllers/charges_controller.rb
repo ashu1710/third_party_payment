@@ -1,7 +1,8 @@
 class ChargesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :find_product
-  
+  before_action :authenticate_user!, except: [:paypal_action]
+  before_action :find_product, only: [:create]
+  skip_before_action :verify_authenticity_token
+
   def create
     stripe_card_id =
       if params[:credit_card].present?
@@ -29,7 +30,36 @@ class ChargesController < ApplicationController
     flash[:error] = e.message
     redirect_to @product
   end
-  
+
+  def payu_return
+    if params["status"].eql?('success')
+      flash[:notice] = 'Payment received. Order Successfully accepted'
+    else
+      flash[:error] = 'Payment not accepted. please try again'
+    end
+    redirect_to root_path
+  end
+
+  def paypal_payment
+    product = Product.find_by id: params[:id]
+    if product.present?
+      redirect_to product.paypal_url(paypal_action_path)
+    else
+      flash[:error] = 'Product not found'
+      redirect_to root_path
+    end
+  end
+
+  def paypal_action
+    params.permit! # Permit all Paypal input params
+    status = params[:payment_status]
+    if status == "Completed"
+      flash[:notice] = 'Payment received. Order Successfully accepted'
+    else
+      flash[:error] = 'Payment not accepted. please try again'
+    end
+    redirect_to root_path
+  end
   private
   
   def card_params

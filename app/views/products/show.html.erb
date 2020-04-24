@@ -4,18 +4,38 @@
   <strong>Name:</strong>
   <%= @product.name %>
 </p>
- 
 <p>
   <strong>Price:</strong>
   <%= number_to_currency(@product.price) %>
 </p>
- 
+<%= link_to 'Edit', edit_product_path(@product) %> |
+<%= link_to 'Back', products_path %>
+<br> 
+ <p>------------------------Pay Using Stripe---------------------</p>
   
 <%= render 'shared/card_and_charge_form', product: @product %>
  
 <% if current_user.credit_cards.reject{ |card| card.new_record? }.any? %>
   <%= render 'shared/charge_form', product: @product %>
 <% end %>
+
+
+<br>
+ <p>------------------------Pay Using PayUMoney---------------------</p>
+
+<% payment_form_for_payu ENV['payu_key'], ENV['payu_secret'],
+            txnid: rand(1111...22222222),
+            amount: @product.price.to_s,
+            productinfo: 'Fees Payment',
+            firstname: 'Test 123',
+            email: current_user.email,
+            phone: '9879475154',
+            surl: ENV['pauuurl'],
+            furl: ENV['pauuurl'],
+            service_provider: "payu_paisa",
+            html: { id: 'payment-form' } %>
+
+<br>
+<p>------------------------------------pay using paypal</p>
+<%= link_to 'Pay using paypal', paypal_payment_path(@product)  %>
  
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
